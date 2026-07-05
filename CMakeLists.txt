@@ -25,6 +25,7 @@ add_executable(MK_TB main.cpp
         ScalePresenter.h
         ScalePresenter.cpp
 )
+set_target_properties(MK_TB PROPERTIES WIN32_EXECUTABLE TRUE)
 target_link_libraries(MK_TB
         Qt::Core
         Qt::Gui
