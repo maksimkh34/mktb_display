@@ -1,6 +1,7 @@
 #pragma once
 #include "ScaleDevice.h"
 #include <QSerialPort>
+#include <QByteArray>
 #include <QTimer>
 
 class MassaKProtocol2 : public ScaleDevice {
@@ -16,11 +17,23 @@ public:
 private slots:
     void handleReadyRead();
     void sendNextCommand();
+    void handleResponseTimeout();
+    void tryAutoConnect();
 
 private:
+    enum class CommandState { Idle, WaitingStatus, WaitingWeight };
+
+    bool openPort(const QString &portName);
+    void closePort();
+    void sendCommand(char command, CommandState nextState);
+
     QSerialPort *m_serial;
     QTimer *m_pollTimer;
-    enum class CommandState { Idle, WaitingStatus, WaitingWeight };
+    QTimer *m_responseTimer;
+    QTimer *m_reconnectTimer;
     CommandState m_state;
     ScaleData m_currentData;
+    QByteArray m_rxBuffer;
+    bool m_autoConnect;
+    int m_consecutiveTimeouts;
 };

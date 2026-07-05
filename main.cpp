@@ -16,8 +16,9 @@ int main(int argc, char *argv[]) {
     // 3. Создаем Presenter, связывающий их
     ScalePresenter presenter(&view, device, &a);
 
-    // 4. Инициализируем подключение (замените "COM3" / "/dev/ttyUSB0" на ваш порт)
-    device->connectDevice("COM3");
+    // Port can be passed as the first argument. Without it the app scans COM ports automatically.
+    const QString portName = a.arguments().value(1);
+    device->connectDevice(portName);
 
     return QApplication::exec();
 }
